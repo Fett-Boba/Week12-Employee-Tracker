@@ -30,7 +30,7 @@ order by d.`name`, e.last_name;
 -- View all employees by manager
 -- 
 use hw_employee_tracker_db;
-SELECT e.id,
+select e.id,
 	e.first_name,
     e.last_name,
 	concat(m.first_name, ' ' ,m.last_name) as 'manager'
@@ -41,13 +41,16 @@ order by manager, e.last_name;
 -- View all roles
 -- 
 use hw_employee_tracker_db;
-SELECT id,
+select id,
 	title,
     salary
 from role
 order by title;
 -- 
--- Insert employee
+-- Delete employee
 --
+use hw_employee_tracker_db;
+SET SQL_SAFE_UPDATES=0;
+delete from employee where last_name = 'Vance' and first_name = 'Phyllis';
 
 

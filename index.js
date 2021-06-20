@@ -26,7 +26,7 @@ const runEmpTracker = () => {
                     'View all employees by department',
                     'View all employees by manager',
                     'View all roles',
-                    'Add employee',
+                    'Delete employee',
                ],
           })
           .then((answer) => {
@@ -47,8 +47,8 @@ const runEmpTracker = () => {
                          srchAllRoles();
                          break;
 
-                    case 'Add employee':
-                         addEmployee();
+                    case 'Delete employee':
+                         deleteEmployee();
                          break;
 
 
@@ -81,7 +81,7 @@ function srchAllEmpsByDept() {
 
 function srchAllEmpsByMgr() {
      connection.query(
-          "SELECT e.id, e.first_name, e.last_name, concat(m.first_name, ' ' ,m.last_name) as 'manager' from employee e left join employee m on m.id = e.manager_id order by manager, e.last_name",
+          "select e.id, e.first_name, e.last_name, concat(m.first_name, ' ' ,m.last_name) as 'manager' from employee e left join employee m on m.id = e.manager_id order by manager, e.last_name",
           (err, res) => {
                if (err) throw err;
                console.table(res);
@@ -91,7 +91,7 @@ function srchAllEmpsByMgr() {
 
 function srchAllRoles() {
      connection.query(
-          "SELECT id, title, salary from role order by title",
+          "select id, title, salary from role order by title",
           (err, res) => {
                if (err) throw err;
                console.table(res);
@@ -99,49 +99,57 @@ function srchAllRoles() {
           });
 }
 
-function addEmployee() {
+function deleteEmployee() {
+     let arrEmp = [];
      connection.query(
-          'INSERT INTO products SET ?',
-          {
-               flavor: 'Rocky Road',
-               price: 3.0,
-               quantity: 50,
-          },
+          "select first_name, last_name from employee",
           (err, res) => {
                if (err) throw err;
-               console.log(`${res.affectedRows} product inserted!\n`);
-               // Call updateProduct AFTER the INSERT completes
-               updateProduct();
-          }
-     )
+               res.forEach(({ first_name, last_name }) => {
+                    arrEmp.push(`${first_name} ${last_name}`);                    
+               });
+               //console.log(arrEmp);
+               inquirer
+               .prompt({
+                    name: 'fullname',
+                    type: 'list',
+                    message: 'Select employee to remove:',
+                    choices: arrEmp,
+               })
+               .then((answer) => {
+               console.log(answer.fullname);
+               var nm = answer.fullname.split(" ");
+               var fn = nm[0];
+               var ln = nm[1];
+               console.log(fn);
+               console.log(ln);
+
+               connection.query(
+                    "delete from employee where first_name = ? and last_name = ?",
+                    [fn, ln],
+                    (err, res) => {
+                         if (err) throw err;
+                         runEmpTracker();
+                    });
+          });
+     });
 }
 
+function addEmployee() {
 
-
-
-
-
-
-
-
-const createProduct = () => {
-     const query = connection.query(
-          'INSERT INTO products SET ?',
+     connection.query(
+          'insert into employee set ?',
           {
-               flavor: 'Rocky Road',
-               price: 3.0,
-               quantity: 50,
+            flavor: 'Rocky Road',
+            price: 3.0,
+            quantity: 50,
           },
           (err, res) => {
-               if (err) throw err;
-               console.log(`${res.affectedRows} product inserted!\n`);
-               // Call updateProduct AFTER the INSERT completes
-               updateProduct();
+            if (err) throw err;
+            console.log(`${res.affectedRows} product inserted!\n`);
+            // Call updateProduct AFTER the INSERT completes
+            updateProduct();
           }
-     );
+        );
 
-     // logs the actual query being run
-     console.log(query.sql);
-};
-
-
+}
