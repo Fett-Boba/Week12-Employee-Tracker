@@ -52,5 +52,20 @@ order by title;
 use hw_employee_tracker_db;
 SET SQL_SAFE_UPDATES=0;
 delete from employee where last_name = 'Vance' and first_name = 'Phyllis';
+-- 
+-- Update employee Role
+-- 
+use hw_employee_tracker_db;
+select 	e.first_name, 
+    e.last_name, 
+    r.id,
+    r.title 
+from employee e 
+inner join role r on e.role_id = r.id
+where first_name = 'Pam' and last_name = 'Beesly';
 
-
+use hw_employee_tracker_db;
+update employee e
+inner join role r on role_id = r.id
+set role_id = '8'
+where e.first_name = 'Pam' and e.last_name = 'Beesly';
