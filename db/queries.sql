@@ -114,6 +114,6 @@ from role r
 inner join department d on r.department_id = d.id
 where d.name = "Human Resources";
 
-
+insert into role(title, salary, department_id) values("Sales Executive", 250000, 1);
 
 

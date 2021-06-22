@@ -160,10 +160,10 @@ function addNewDept() {
           ])
           .then((answer) => {
                connection.query("insert into department(name) values(?)",
-                    [answer.dept],
+                    [answer.dept],                    
                     (err, res) => {
-                         if (err) throw err;
-                         console.table(res);
+                         if (err) throw err;                         
+                         console.log(`\n---===>>> New ${answer.dept} department added!\n`);
                          runEmpTracker();
                     });
           });
@@ -215,7 +215,6 @@ function addNewRole() {
                               });
                     });
           });
-
 }
 
 // Delete an employee from the database
