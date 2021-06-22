@@ -50,7 +50,7 @@ order by title;
 -- Delete employee
 --
 use hw_employee_tracker_db;
-SET SQL_SAFE_UPDATES=0;
+SET SQL_SAFE_UPDATES = 0;
 delete from employee where last_name = 'Vance' and first_name = 'Phyllis';
 -- 
 -- Update employee Role
@@ -69,3 +69,51 @@ update employee e
 inner join role r on role_id = r.id
 set role_id = '8'
 where e.first_name = 'Pam' and e.last_name = 'Beesly';
+
+-- 
+-- Update employee manager
+--
+-- use hw_employee_tracker_db;
+-- select distinct m.first_name, 
+--     m.last_name
+-- from employee e 
+-- left join employee m on m.id = e.manager_id;
+use hw_employee_tracker_db;
+select 	distinct m.id as manager_id,
+	m.first_name,
+    m.last_name
+from employee e
+left join employee m on m.id = e.manager_id; 
+
+use hw_employee_tracker_db;
+select e.id,
+	e.first_name,
+    e.last_name,
+	m.first_name,
+    m.last_name, 
+    m.id
+from employee e
+left join employee m on m.id = e.manager_id;
+
+use hw_employee_tracker_db;
+update employee e
+left join employee m on m.id = e.manager_id
+set e.manager_id = 1
+where e.first_name = "Jim" and e.last_name = "Halpert";
+
+--
+-- Add new role
+-- 
+use hw_employee_tracker_db;
+select r.title,
+	r.salary,
+    r.department_id,
+    d.id,
+    d.name
+from role r 
+inner join department d on r.department_id = d.id
+where d.name = "Human Resources";
+
+
+
+
